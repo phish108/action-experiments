@@ -4,10 +4,11 @@ name: dispatched
 
 # Controls when the action will run. 
 on:
+  repository_dispatch:
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-  # this allows you to tigger this activitiy from anywhere
-  repository_dispatch:    
+   
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
