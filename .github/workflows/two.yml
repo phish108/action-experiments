@@ -4,8 +4,6 @@ name: two
 # Controls when the action will run. 
 on:  
   create:
-    types: 
-      - created
 
 jobs:
   # This workflow contains a single job called "build"
