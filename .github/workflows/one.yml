@@ -24,9 +24,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             console.log(JSON.stringify(context))
-            github.git.createTag({
-                owner: context.payload.repository.owner.login, 
-                repo: context.repo,
+            {owner, repo} = context.repo
+            await github.git.createTag({
+                owner,
+                repo,
                 ref: context.ref,
                 tag: "1.0.0"
               })
