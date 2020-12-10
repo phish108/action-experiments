@@ -22,4 +22,9 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            console.log(steps.files.output.all)
+            console.log(JSON.stringify(context))
+            github.git.createTag({
+                ref: context.ref
+              })
+            console.log("done")
+            

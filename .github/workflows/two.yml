@@ -3,8 +3,7 @@ name: two
 
 # Controls when the action will run. 
 on:  
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  tag:
 
 jobs:
   # This workflow contains a single job called "build"
@@ -12,4 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps: 
-      - run: echo "foo bar"
+      - use: actions/github-script@v3
+        with:
+          script: |
+            console.log(JSON.stringify(context))
