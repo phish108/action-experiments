@@ -23,10 +23,9 @@ jobs:
       - name: trigger external
         uses: actions/github-script@v3
         with:
-          input-value: ${{steps.fiels.output.all}}
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            console.log(${{steps.files.output.all}})
+            console.log('${{ steps.files.output.all }}')
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
