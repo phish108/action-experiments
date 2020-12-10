@@ -28,7 +28,7 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 ref: "refs/tags/v1.0.3",
-                object: context.sha,
+                sha: context.sha,
                 type: "commit",
                 message: "release v1.0.3"
               })
