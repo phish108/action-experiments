@@ -3,7 +3,7 @@ name: two
 
 # Controls when the action will run. 
 on:  
-  tag:
+  create:
 
 jobs:
   # This workflow contains a single job called "build"
