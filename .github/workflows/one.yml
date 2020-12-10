@@ -1,0 +1,26 @@
+
+name: one
+
+# Controls when the action will run. 
+on:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: trigger by push
+        run: echo "Triggered by Push!"
+      - name: trigger external
+        uses: actions/github-script@v3
+        run: |
+          github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
+            owner: "phish108",
+            repo: "actions-experiments",
+            workflow_id: "two"
+          })
