@@ -26,7 +26,7 @@ jobs:
           input-value: ${{steps.fiels.output.all}}
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            console.log(core.getInput('input-value'))
+            console.log(${{steps.files.output.all}})
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
