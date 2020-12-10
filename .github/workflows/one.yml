@@ -24,7 +24,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             console.log(JSON.stringify(context))
-            {owner, repo} = context.repo
+            let {owner, repo} = context.repo()
             await github.git.createTag({
                 owner,
                 repo,
