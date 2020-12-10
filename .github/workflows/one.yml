@@ -21,7 +21,8 @@ jobs:
         with:
           script: |
             github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
-              owner: "phish108",
-              repo: "actions-experiments",
-              workflow_id: "two"
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "two",
+              ref: context.ref,
             })
