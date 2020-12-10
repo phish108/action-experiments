@@ -17,14 +17,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      #- id: files
-      #  uses: jitterbit/get-changed-files@v1
+      - id: files
+        uses: jitterbit/get-changed-files@v1
     
       - name: trigger external
         uses: actions/github-script@v3
         with:
+          input-value: ${{steps.fiels.output.all}}
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
+            console.log(core.getInput('input-value'))
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
