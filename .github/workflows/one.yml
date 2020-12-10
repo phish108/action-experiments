@@ -21,10 +21,14 @@ jobs:
       - name: trigger external
         uses: actions/github-script@v3
         with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             console.log(JSON.stringify(context))
             github.git.createTag({
-                ref: context.ref
+                owner: context.payload.repository.owner.login, 
+                repo: context.repo,
+                ref: context.ref,
+                tag: "1.0.0"
               })
             console.log("done")
             
