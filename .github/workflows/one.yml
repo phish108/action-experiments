@@ -3,6 +3,8 @@ name: one
 
 # Controls when the action will run. 
 on:
+  push:
+  
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -13,21 +15,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: trigger by push
-        run: echo "Triggered by Push!"
+      - id: files
+        uses: jitterbit/get-changed-files@v1
+    
       - name: trigger external
         uses: actions/github-script@v3
         with:
           script: |
-            await github.request("POST /repos/{owner}/{repo}/actions/workflows", {
-              owner: context.repo.owner,
-              repo: context.repo.repo
-            })
-
-            github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: "workflow/two",
-              ref: context.ref,
-            })
+            console.log(context.steps.files.output.all)
