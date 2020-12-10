@@ -4,6 +4,8 @@ name: two
 # Controls when the action will run. 
 on:  
   create:
+    types: 
+      - created
 
 jobs:
   # This workflow contains a single job called "build"
@@ -14,4 +16,5 @@ jobs:
       - uses: actions/github-script@v3
         with:
           script: |
+            console.log("hello")
             console.log(JSON.stringify(context))
