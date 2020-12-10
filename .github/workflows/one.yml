@@ -20,6 +20,11 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
+            await github.request("POST /repos/{owner}/{repo}/actions/workflows", {
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            })
+
             github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
               owner: context.repo.owner,
               repo: context.repo.repo,
