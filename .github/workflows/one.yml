@@ -23,7 +23,7 @@ jobs:
       - name: trigger external
         uses: actions/github-script@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
