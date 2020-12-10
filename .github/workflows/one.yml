@@ -17,17 +17,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: files
+      - id: chg_files
         uses: jitterbit/get-changed-files@v1
         with:
           format: json
       
-      - run: echo "${{ steps.files.output.all }}"
+      - run: echo "${{ steps.chg_files.output }}"
 
       - name: trigger external
         uses: actions/github-script@v3
         env:
-          DATA: ${{ steps.files.output.All }}
+          DATA: ${{ steps.chg_files.output.all }}
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
