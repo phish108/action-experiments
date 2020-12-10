@@ -25,13 +25,6 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            version = "v1.0.8"
-            console.log(JSON.stringify(context))
-            if (context.ref_type === "tag") 
-              exit(1)
-            else 
-              console.log("no a tagged reference")
-
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
