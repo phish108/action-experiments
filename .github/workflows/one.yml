@@ -27,7 +27,7 @@ jobs:
             await github.git.createTag({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: "refs/tags/v1.0.4",
+                tag: "refs/tags/v1.0.4",
                 object: context.sha,
                 type: "commit",
                 message: "release v1.0.4"
