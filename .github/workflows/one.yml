@@ -29,10 +29,10 @@ jobs:
             await github.git.createRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: "refs/tags/v1.0.4",
+                ref: "refs/tags/v1.0.5",
                 sha: context.sha,
                 type: "commit",
-                message: "release v1.0.4"
+                message: "release v1.0.5"
               })
             console.log("done")
             
