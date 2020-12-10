@@ -28,10 +28,10 @@ jobs:
                 owner: context.repo.owner,
                 repo: context.repo.repo,
                 ref: context.ref,
-                tag: "1.0.0",
+                tag: "1.0.1",
                 object: context.sha,
                 type: "commit",
-                message: "release 1.0.0"
+                message: "release 1.0.1"
               })
             console.log("done")
             
