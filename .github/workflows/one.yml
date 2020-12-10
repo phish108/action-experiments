@@ -23,19 +23,20 @@ jobs:
       - name: trigger external
         uses: actions/github-script@v3
         with:
-          github-token: ${{ secrets.TRIGGER_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            version = "v1.0.7"
+            version = "v1.0.8"
             console.log(JSON.stringify(context))
             if (context.ref_type === "tag") 
               exit(1)
-            await github.git.createRef({
+            else 
+              console.log("no a tagged reference")
+
+            await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: `refs/tags/{version}`,
-                sha: context.sha,
-                type: "commit",
-                message: `release {version}`
+                ref: context.ref,
+                workflow_id: "two"
               })
             console.log("done")
             
