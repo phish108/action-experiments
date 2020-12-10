@@ -14,4 +14,4 @@ jobs:
       - uses: actions/github-script@v3
         with:
           script: |
-            console.log(context.workflow)
+            console.log(JSON.stringify(context))

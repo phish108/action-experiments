@@ -24,13 +24,13 @@ jobs:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             console.log(JSON.stringify(context))
-            await github.git.createRef({
+            await github.git.createTag({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: "refs/tags/v1.0.3",
-                sha: context.sha,
+                ref: "refs/tags/v1.0.4",
+                object: context.sha,
                 type: "commit",
-                message: "release v1.0.3"
+                message: "release v1.0.4"
               })
             console.log("done")
             
