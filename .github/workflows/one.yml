@@ -18,9 +18,10 @@ jobs:
         run: echo "Triggered by Push!"
       - name: trigger external
         uses: actions/github-script@v3
-        script: |
-          github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
-            owner: "phish108",
-            repo: "actions-experiments",
-            workflow_id: "two"
-          })
+        with:
+          script: |
+            github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
+              owner: "phish108",
+              repo: "actions-experiments",
+              workflow_id: "two"
+            })
