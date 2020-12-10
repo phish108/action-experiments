@@ -11,7 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps: 
-      - use: actions/github-script@v3
+      - uses: actions/github-script@v3
         with:
           script: |
-            console.log(JSON.stringify(context))
+            console.log(context.workflow)
