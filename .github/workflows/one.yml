@@ -25,16 +25,17 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
+            version = "v1.0.7"
             console.log(JSON.stringify(context))
             if (context.ref_type === "tag") 
               exit(1)
             await github.git.createRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
-                ref: "refs/tags/v1.0.6",
+                ref: `refs/tags/{version}`,
                 sha: context.sha,
                 type: "commit",
-                message: "release v1.0.6"
+                message: `release {version}`
               })
             console.log("done")
             
