@@ -21,13 +21,11 @@ jobs:
         uses: jitterbit/get-changed-files@v1
         with:
           format: json
-      
-      - run: echo "${{ steps.chg_files.output }}"
 
       - name: trigger external
         uses: actions/github-script@v3
         env:
-          DATA: ${{ steps.chg_files.output.all }}
+          DATA: ${{ steps.chg_files.outputs.all }}
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
