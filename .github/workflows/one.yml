@@ -23,6 +23,6 @@ jobs:
             github.request("POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches", {
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_id: "two",
+              workflow_id: "workflow/two",
               ref: context.ref,
             })
