@@ -23,7 +23,7 @@ jobs:
       - name: trigger external
         uses: actions/github-script@v3
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             version = "v1.0.8"
             console.log(JSON.stringify(context))
