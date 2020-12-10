@@ -26,6 +26,8 @@ jobs:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             console.log(JSON.stringify(context))
+            if (context.ref_type === "tag") 
+              exit(1)
             await github.git.createRef({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
