@@ -36,11 +36,11 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold', hold)
+            core.exportVariable('HOLDRELEASE', hold)
 
   deploy: 
     needs: build
-    if: steps.holdrelease.outputs.hold != 'true'
+    if: context.env.HOLDRELEASE != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: trigger external
