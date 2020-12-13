@@ -56,7 +56,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: variables
-      - run: "cat myVars.env && . myVars.env"
+      - run: cat myVars.env >> $GITHUB_ENV
       - name: trigger external
         if: env.HOLDRELEASE != 'true'
         uses: actions/github-script@v3
