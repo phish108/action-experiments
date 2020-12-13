@@ -36,34 +36,14 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold', JSON.stringify({hold}))
-      - name: is hold release
-        run: | 
-          echo "${{ steps.holdrelease.outputs.hold }}" >> myVars.env
-      - name: Upload variables
-        uses: actions/upload-artifact@v2
-        with:
-          name: variables
-          path: myVars.env
-
-  deploy: 
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download variables
-        uses: actions/download-artifact@v2
-        with:
-          name: variables
-
-      - id: vjson 
-        run: echo "::set-output name=vars::$(cat myVars.env)"
+            core.setOutput('hold', JSON.stringify({hold})
 
       - name: trigger external
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            const myvars = ${{steps.vjson.outputs.vars}}
+            const myvars = ${{steps.holdrelease.outputs.hold}}
             console.log(JSON.stringify(myvars))
             if (myvars && myvars.hold != true) {
               console.log("release via task two")
@@ -71,7 +51,8 @@ jobs:
                   owner: context.repo.owner,
                   repo: context.repo.repo,
                   ref: context.ref,
-                  workflow_id: "two.yml"
+                  workflow_id: "two.yml",
+                  client_payload: "funny business"
                 })
             }
             console.log("done")

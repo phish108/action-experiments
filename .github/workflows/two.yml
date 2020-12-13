@@ -11,6 +11,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps: 
+      - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
       - uses: actions/github-script@v3
         with:
           script: |
