@@ -52,7 +52,7 @@ jobs:
                   repo: context.repo.repo,
                   ref: context.ref,
                   workflow_id: "two.yml",
-                  client_payload: JSON.stringify({funny:"business"})
+                  client_payload: JSON.stringify({funny: ${{ steps.chg_files.outputs.all }} })
                 })
             }
             console.log("done")
