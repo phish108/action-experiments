@@ -36,7 +36,7 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold', JSON.stringify({hold})
+            core.setOutput('hold', JSON.stringify({hold}))
 
       - name: trigger external
         uses: actions/github-script@v3
