@@ -58,6 +58,8 @@ jobs:
       - id: vjson 
         run: echo "::set-output name=vars::$(cat myVars.env)"
 
+      - run: echo "${{steps.vjson.outputs.vars}}"
+      
       - name: trigger external
         uses: actions/github-script@v3
         with:
