@@ -64,8 +64,8 @@ jobs:
             varsStr = await Promise( (a,r) => fs.readFile("myVars.env", (e, d) => {if (e) { r(e) } else { a(d) }}))
             console.log("vars" + varsStr)
             vars = JSON.parse(varsStr)
-            console.log("vars hold" + vars.hold)
-            if (!vars.hold)
+            console.log(vars)
+            if (vars && vars.hold != true)
               console.log("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
