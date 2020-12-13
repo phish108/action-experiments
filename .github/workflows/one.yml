@@ -36,16 +36,31 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.exportVariable('HOLDRELEASE', hold)
+            core.setOutput('hold', hold)
       - name: is hold release
-        run: echo $HOLDRELEASE
+        run: | 
+          echo $HOLDRELEASE
+          echo > myVars.env
+          echo ${{ steps.holdrelease.outputs.hold }} >> myVars.env
+      - name: Upload variables
+        uses: actions/upload-artifact@v2
+        with:
+          name: variables
+          path: myVars.env
 
   deploy: 
     needs: build
-    # if: env.HOLDRELEASE != 'true'
     runs-on: ubuntu-latest
     steps:
+      - name: Download variables
+        uses: actions/download-artifact@v2
+        with:
+          name: variables
+      - run: |
+        cat myVars.env
+        . myVars.env
       - name: trigger external
+        if: env.HOLDRELEASE != 'true'
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
@@ -59,4 +74,3 @@ jobs:
                 workflow_id: "two.yml"
               })
             console.log("done")
-            
