@@ -36,12 +36,10 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold', hold)
+            core.setOutput('hold', JSON.stringify({hold}))
       - name: is hold release
         run: | 
-          echo $HOLDRELEASE
-          echo > myVars.env
-          echo ${{ steps.holdrelease.outputs.hold }} >> myVars.env
+          echo "${{ steps.holdrelease.outputs.hold }}"" >> myVars.env
       - name: Upload variables
         uses: actions/upload-artifact@v2
         with:
@@ -56,20 +54,24 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: variables
-      - run: | 
-          cat myVars.env  
-          cat myVars.env >> $GITHUB_ENV
+
       - name: trigger external
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            console.log("is hold? " + process.env.HOLDRELEASE)
-            console.log("release via task two")
-            await github.actions.createWorkflowDispatch({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                ref: context.ref,
-                workflow_id: "two.yml"
-              })
+            fs = require("fs")
+            varsStr = await new Promise( (a,r) = fs.readFile("myVars.env", (e, d) => {if (e) r(e) else a(d)}))
+            console.log("vars" + varsStr)
+            vars = JSON.parse(varsStr)
+            console.log("vars hold" + vars.hold)
+            if (!vars.hold)
+              console.log("release via task two")
+              await github.actions.createWorkflowDispatch({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  ref: context.ref,
+                  workflow_id: "two.yml"
+                })
+            }
             console.log("done")
