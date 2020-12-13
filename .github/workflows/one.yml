@@ -61,7 +61,7 @@ jobs:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             fs = require("fs")
-            varsStr = await new Promise( (a,r) => fs.readFile("myVars.env", (e, d) => {if (e) r(e) else a(d)}))
+            varsStr = await new Promise( (a,r) => fs.readFile("myVars.env", (e, d) => {if (e) { r(e) } else { a(d) }}))
             console.log("vars" + varsStr)
             vars = JSON.parse(varsStr)
             console.log("vars hold" + vars.hold)
