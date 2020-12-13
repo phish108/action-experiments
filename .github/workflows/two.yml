@@ -4,6 +4,9 @@ name: two
 # Controls when the action will run. 
 on:  
   workflow_dispatch:
+    inputs:
+      funny:
+        default: "not funny"
 
 jobs:
   # This workflow contains a single job called "build"
@@ -11,7 +14,7 @@ jobs:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     steps: 
-      - run: 'echo "payload: ${{ toJson(github.event.client_payload) }}"'
+      - run: 'echo "payload: ${{ github.event.inputs.funny }}"'
       - uses: actions/github-script@v3
         with:
           script: |
