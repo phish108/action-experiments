@@ -52,7 +52,7 @@ jobs:
                   repo: context.repo.repo,
                   ref: context.ref,
                   workflow_id: "two.yml",
-                  inputs: JSON.stringify({funny: ${{ steps.chg_files.outputs.all }} })
+                  inputs: {funny: ${{ steps.chg_files.outputs.all }} }
                 })
             }
             console.log("done")
