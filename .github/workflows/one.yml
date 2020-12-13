@@ -21,7 +21,7 @@ jobs:
         uses: jitterbit/get-changed-files@v1
         with:
           format: json
-          
+
       - name: check hold
         id: holdrelease
         uses: actions/github-script@v3
@@ -40,7 +40,7 @@ jobs:
 
   deploy: 
     needs: build
-    if: !steps.holdrelease.outputs.hold 
+    if: steps.holdrelease.outputs.hold != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: trigger external
