@@ -55,13 +55,15 @@ jobs:
         with:
           name: variables
 
+      - id: vjson 
+        run: echo "::set-output name=vars::$(cat myVars.env)""
+
       - name: trigger external
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            fs = require("fs")
-            varsStr = await Promise( (a,r) => fs.readFile("myVars.env", (e, d) => {if (e) { r(e) } else { a(d) }}))
+            varsStr = steps.vjson.outputs.vars
             console.log("vars" + varsStr)
             vars = JSON.parse(varsStr)
             console.log(vars)
