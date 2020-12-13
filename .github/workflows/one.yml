@@ -58,18 +58,14 @@ jobs:
       - id: vjson 
         run: echo "::set-output name=vars::$(cat myVars.env)"
 
-      - run: echo "${{steps.vjson.outputs.vars}}"
-      
       - name: trigger external
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            varsStr = "${{steps.vjson.outputs.vars}}"
-            console.log("vars" + varsStr)
-            vars = JSON.parse(varsStr)
-            console.log(vars)
-            if (vars && vars.hold != true)
+            myvars = ${{steps.vjson.outputs.vars}}
+            console.log(JSON.stringify(myvars))
+            if (myvars && myvars.hold != true)
               console.log("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
