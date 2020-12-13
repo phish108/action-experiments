@@ -56,7 +56,9 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: variables
-      - run: cat myVars.env >> $GITHUB_ENV
+      - run: | 
+        cat myVars.env  
+        cat myVars.env >> $GITHUB_ENV
       - name: trigger external
         uses: actions/github-script@v3
         with:
