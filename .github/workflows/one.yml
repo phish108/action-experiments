@@ -21,15 +21,34 @@ jobs:
         uses: jitterbit/get-changed-files@v1
         with:
           format: json
-
-      - name: trigger external
+          
+      - name: check hold
+        id: holdrelease
         uses: actions/github-script@v3
         env:
           DATA: ${{ steps.chg_files.outputs.all }}
         with:
+          script: |
+            files = JSON.parse(process.env.DATA)
+            hold = files
+              .map(file => (file.startsWith('.github/') || 
+                            file.startsWith('tests/') ||
+                            file.startsWith('test/') || 
+                            file.startsWith('.gitignore')))
+              .reduce((sw,c) => (sw && c), true)
+            core.setOutput('hold', hold)
+
+  deploy: 
+    needs: build
+    if: !steps.holdrelease.outputs.hold 
+    runs-on: ubuntu-latest
+    steps:
+      - name: trigger external
+        uses: actions/github-script@v3
+        with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            console.log(process.env.DATA)
+            console.log("release via task two")
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
                 repo: context.repo.repo,
