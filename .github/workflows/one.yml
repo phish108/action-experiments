@@ -63,9 +63,9 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            myvars = ${{steps.vjson.outputs.vars}}
+            const myvars = ${{steps.vjson.outputs.vars}}
             console.log(JSON.stringify(myvars))
-            if (myvars && myvars.hold != true)
+            if (myvars && myvars.hold != true) {
               console.log("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
