@@ -37,10 +37,12 @@ jobs:
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
             core.exportVariable('HOLDRELEASE', hold)
+      - name: is hold release
+        run: echo $HOLDRELEASE
 
   deploy: 
     needs: build
-    if: env.HOLDRELEASE != 'true'
+    # if: env.HOLDRELEASE != 'true'
     runs-on: ubuntu-latest
     steps:
       - name: trigger external
@@ -48,6 +50,7 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
+            console.log("is hold? " + process.env.HOLDRELEASE)
             console.log("release via task two")
             await github.actions.createWorkflowDispatch({
                 owner: context.repo.owner,
