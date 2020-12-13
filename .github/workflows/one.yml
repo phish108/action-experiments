@@ -39,7 +39,7 @@ jobs:
             core.setOutput('hold', JSON.stringify({hold}))
       - name: is hold release
         run: | 
-          echo "${{ steps.holdrelease.outputs.hold }}"" >> myVars.env
+          echo "${{ steps.holdrelease.outputs.hold }}" >> myVars.env
       - name: Upload variables
         uses: actions/upload-artifact@v2
         with:
