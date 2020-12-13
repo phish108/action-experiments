@@ -56,7 +56,7 @@ jobs:
           name: variables
 
       - id: vjson 
-        run: echo "::set-output name=vars::$(cat myVars.env)""
+        run: echo "::set-output name=vars::$(cat myVars.env)"
 
       - name: trigger external
         uses: actions/github-script@v3
