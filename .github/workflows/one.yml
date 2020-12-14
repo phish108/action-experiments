@@ -25,18 +25,29 @@ jobs:
       - name: check hold
         id: holdrelease
         uses: actions/github-script@v3
-        env:
-          DATA: ${{ steps.chg_files.outputs.all }}
         with:
           script: |
-            files = JSON.parse(process.env.DATA)
+            console.log(JSON.stringify(context, TRUE))
+            files = ${{ steps.chg_files.outputs.all }}
             hold = files
               .map(file => (file.startsWith('.github/') || 
                             file.startsWith('tests/') ||
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold', JSON.stringify({hold}))
+            core.setOutput('hold_protected', hold))
+
+            hold2 = files
+              .map(file => (file == 'package.json' || 
+                            file == 'package-lock.json'))
+              .reduce((sw,c) => (sw && c), true)
+            if (hold2) {
+
+              // get changes for package.json
+
+              // get package.json if exists
+              // get devDependencies
+            }
 
       - name: trigger external
         uses: actions/github-script@v3
@@ -44,9 +55,9 @@ jobs:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             const myvars = ${{steps.holdrelease.outputs.hold}}
-            console.log(JSON.stringify(myvars))
-            if (myvars && myvars.hold != true) {
-              console.log("release via task two")
+            core.info(JSON.stringify(myvars))
+            if (myvars && myvars.hold_protected != true) {
+              core.info("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
                   repo: context.repo.repo,
@@ -55,4 +66,4 @@ jobs:
                   inputs: {"funny": JSON.stringify(${{ steps.chg_files.outputs.all }}) }
                 })
             }
-            console.log("done")
+            core.info("done")
