@@ -57,6 +57,7 @@ jobs:
             devDeps = Object.keys(JSON.parse(pFile.data).devDependencies)
 
             console.log(JSON.stringify(devDeps))
+            console.log(pInfo[0].patch)
 
             changes = pInfo[0].patch
               .split("\n")
