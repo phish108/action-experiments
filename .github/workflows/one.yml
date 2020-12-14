@@ -35,6 +35,7 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
+
             core.setOutput('hold_protected', hold)
 
             hold2 = files
@@ -42,17 +43,43 @@ jobs:
                             file == 'package-lock.json'))
               .reduce((sw,c) => (sw && c), true)
 
+            core.setOutput('hold_package', hold2)
+
             result = await github.request(context.payload.repository.compare_url, {
                 base: context.payload.before,
                 head: context.payload.after
               })
-            console.log(JSON.stringify(result, null , "  "))
+            
+            pInfo = result.data.files.
+              filter(file => file.filename == "package.json")
+
+            pFile = await github.request(pInfo[0].raw_url)
+            console.log(JSON.stringify(pFile, null , "  "))
+            devDeps = Object.keys(pFile.data.devDependencies)
+
+            changes = pInfo[0].patch
+              .split("\n")
+              .filter(change => change.matches(/^[+-]\s*))
+              .map(change => change.replace(/^[+-]\s*"([^"])+":/, "$1"))
+              .filter(change => change && change.length)
+              
+            isdevChange = changes
+              .filter(change => devDeps.includes(change)))
+              .length
+            
+            isotherChange = changes.length - isdevChange
+
+            core.setOutput('hold_testing', isdevChange && isotherChange)
+
+            if (isdevChange) {
+              console.log("is dev change. MAY HOLD!")
+            }
+
+            if (isotherChange) {
+              console.log("is production change. PROCEED!")
+            }
 
             if (hold2) {
-              result = github.request(context.payload.repository.compare_url, {
-                base: context.payload.before,
-                head: context.payload.after
-              })
               // get changes for package.json
               // get package.json if exists
               // get devDependencies
@@ -63,7 +90,7 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            myvars = ${{steps.holdrelease.outputs.hold}}
+            myvars = ${{steps.holdrelease.outputs.hold_protected}}
             core.info(JSON.stringify(myvars))
             if (myvars && myvars.hold_protected != true) {
               core.info("release via task two")

@@ -1,0 +1,14 @@
+{
+  "name": "node-jose-tools",
+  "version": "1.6.19",
+  "dependencies": {
+    "marked": "1.2.5",
+    "marked-terminal": "4.1.0"
+  },
+  "devDependencies": {
+    "eslint": "7.15.0",
+    "eslint-plugin-babel": "5.3.1",
+    "mocha": "8.2.1",
+    "mock-stdin": "1.0.0"
+  }
+}
