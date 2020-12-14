@@ -82,7 +82,7 @@ jobs:
 
       - name: trigger external
         uses: actions/github-script@v3
-        if: ${{ steps.holdrelease.outputs.proceed }}
+        if: ${{ steps.holdrelease.outputs.proceed == true }}
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
