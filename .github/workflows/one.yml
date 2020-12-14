@@ -55,7 +55,7 @@ jobs:
 
             pFile = await github.request(pInfo[0].raw_url)
             console.log(JSON.stringify(pFile, null , "  "))
-            devDeps = Object.keys(pFile.data.devDependencies)
+            devDeps = Object.keys(JSON.parse(pFile.data).devDependencies)
 
             changes = pInfo[0].patch
               .split("\n")
