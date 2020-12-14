@@ -27,7 +27,7 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            console.log(JSON.stringify(context, TRUE))
+            console.log(JSON.stringify(context, null , "  "))
             files = ${{ steps.chg_files.outputs.all }}
             hold = files
               .map(file => (file.startsWith('.github/') || 
@@ -35,16 +35,14 @@ jobs:
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
-            core.setOutput('hold_protected', hold))
+            core.setOutput('hold_protected', hold)
 
             hold2 = files
               .map(file => (file == 'package.json' || 
                             file == 'package-lock.json'))
               .reduce((sw,c) => (sw && c), true)
             if (hold2) {
-
               // get changes for package.json
-
               // get package.json if exists
               // get devDependencies
             }
