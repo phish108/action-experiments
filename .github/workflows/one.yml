@@ -54,18 +54,23 @@ jobs:
               filter(file => file.filename == "package.json")
 
             pFile = await github.request(pInfo[0].raw_url)
-            console.log(JSON.stringify(pFile, null , "  "))
             devDeps = Object.keys(JSON.parse(pFile.data).devDependencies)
+
+            console.log(JSON.stringify(devDeps))
 
             changes = pInfo[0].patch
               .split("\n")
               .filter(change => change.match(/^[+-]\s*/))
               .map(change => change.replace(/^[+-]\s*"([^"])+":/, "$1"))
               .filter(change => change && change.length)
+
+            console.log(changes)
               
             isdevChange = changes
               .filter(change => devDeps.includes(change))
               .length
+
+            console.log(`dev changes {isdevChange}`)
             
             isotherChange = changes.length - isdevChange
 
