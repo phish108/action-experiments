@@ -76,23 +76,18 @@ jobs:
 
             core.setOutput('hold_testing', isdevChange > 0 && isotherChange == 0)
 
-
       - name: trigger external
         uses: actions/github-script@v3
+        if: ${{ !(steps.holdrelease.outputs.hold_protected || steps.holdrelease.outputs.hold_testing) }}
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            bProtected = ${{ steps.holdrelease.outputs.hold_protected }}
-            bTesting = ${{ steps.holdrelease.outputs.hold_testing }}
-
-            if (!(bProtected || bTesting)) {
-              core.info("release via task two")
-              await github.actions.createWorkflowDispatch({
-                  owner: context.repo.owner,
-                  repo: context.repo.repo,
-                  ref: context.ref,
-                  workflow_id: "two.yml",
-                  inputs: {"funny": JSON.stringify({foo: "bar"}) }
-                })
-            }
-            core.info("done")
+            core.info("release via task two")
+            await github.actions.createWorkflowDispatch({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: context.ref,
+                workflow_id: "two.yml",
+                inputs: {"funny": JSON.stringify({foo: "bar"}) }
+              })
+          
