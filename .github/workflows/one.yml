@@ -62,7 +62,7 @@ jobs:
             changes = pInfo[0].patch
               .split("\n")
               .filter(change => change.match(/^[+-]\s*/))
-              .map(change => change.replace(/^[+-]\s*"([^"])+":/, "$1"))
+              .map(change => change.replace(/^[+-]\s*"([^"]+)":/, "$1"))
               .filter(change => change && change.length)
 
             console.log(changes)
