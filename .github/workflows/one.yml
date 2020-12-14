@@ -28,7 +28,6 @@ jobs:
               })
 
             files = result.data.files.map(file => file.filename)
-            //console.log(JSON.stringify(context, null , "  "))
 
             hold = files
               .map(file => (file.startsWith('.github/') || 
@@ -37,7 +36,7 @@ jobs:
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
 
-            console.log("protected directories? " + hold)
+            core.info("protected directories? " + hold)
             core.setOutput('hold_protected', hold)
 
             isdevChange = 0
@@ -48,6 +47,7 @@ jobs:
                             file == 'package-lock.json'))
               .reduce((sw,c) => (sw && c), true)
 
+            core.info("protected directories? " + hold)
             core.setOutput('hold_package', hold2)
 
             if (hold2) {
@@ -70,12 +70,8 @@ jobs:
               isotherChange = changes.length - isdevChange
             }
 
-            if (isdevChange) {
-              console.log("is dev change. MAY HOLD!")
-            }
-
-            if (isotherChange) {
-              console.log("is production change. PROCEED!")
+            if (isdevChange > 0 && isotherChange == 0) {
+              core.info("is dev only change. HOLD!")
             }
 
             core.setOutput('hold_testing', isdevChange > 0 && isotherChange == 0)
@@ -87,10 +83,9 @@ jobs:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             bProtected = ${{ steps.holdrelease.outputs.hold_protected }}
-            bPackage = ${{ steps.holdrelease.outputs.hold_package }}
             bTesting = ${{ steps.holdrelease.outputs.hold_testing }}
-            
-            if (!(bProtected || bPackage || bTesting)) {
+
+            if (!(bProtected || bTesting)) {
               core.info("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
