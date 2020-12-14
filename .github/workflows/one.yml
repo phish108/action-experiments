@@ -64,7 +64,7 @@ jobs:
               .filter(change => change && change.length)
               
             isdevChange = changes
-              .filter(change => devDeps.includes(change)))
+              .filter(change => devDeps.includes(change))
               .length
             
             isotherChange = changes.length - isdevChange
