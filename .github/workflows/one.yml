@@ -29,15 +29,15 @@ jobs:
 
             files = result.data.files.map(file => file.filename)
 
-            hold = files
+            hold1 = files
               .map(file => (file.startsWith('.github/') || 
                             file.startsWith('tests/') ||
                             file.startsWith('test/') || 
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
 
-            core.info("protected directories? " + hold)
-            core.setOutput('hold_protected', hold)
+            core.info("protected directories? " + hold1)
+            core.setOutput('hold_protected', hold1)
 
             isdevChange = 0
             isotherChange = 0
@@ -70,15 +70,17 @@ jobs:
               isotherChange = changes.length - isdevChange
             }
 
-            if (isdevChange > 0 && isotherChange == 0) {
+            hold3 = (isdevChange > 0 && isotherChange == 0)
+            if (hold3) {
               core.info("is dev only change. HOLD!")
             }
 
-            core.setOutput('hold_testing', isdevChange > 0 && isotherChange == 0)
+            core.setOutput('hold_testing', hold3)
+            core.setOutput('proceed', !(hold1 || hold3))
 
       - name: trigger external
         uses: actions/github-script@v3
-        if: ${{ !(steps.holdrelease.outputs.hold_protected || steps.holdrelease.outputs.hold_testing) }}
+        if: ${{ steps.holdrelease.outputs.proceed }}
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
