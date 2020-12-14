@@ -27,7 +27,7 @@ jobs:
         uses: actions/github-script@v3
         with:
           script: |
-            console.log(JSON.stringify(context, null , "  "))
+            //console.log(JSON.stringify(context, null , "  "))
             files = ${{ steps.chg_files.outputs.all }}
             hold = files
               .map(file => (file.startsWith('.github/') || 
@@ -41,7 +41,18 @@ jobs:
               .map(file => (file == 'package.json' || 
                             file == 'package-lock.json'))
               .reduce((sw,c) => (sw && c), true)
+
+            result = await github.request(context.payload.repository.compare_url, {
+                base: context.payload.before,
+                head: context.payload.after
+              })
+            console.log(JSON.stringify(result, null , "  "))
+
             if (hold2) {
+              result = github.request(context.payload.repository.compare_url, {
+                base: context.payload.before,
+                head: context.payload.after
+              })
               // get changes for package.json
               // get package.json if exists
               // get devDependencies
@@ -52,7 +63,7 @@ jobs:
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            const myvars = ${{steps.holdrelease.outputs.hold}}
+            myvars = ${{steps.holdrelease.outputs.hold}}
             core.info(JSON.stringify(myvars))
             if (myvars && myvars.hold_protected != true) {
               core.info("release via task two")
