@@ -17,18 +17,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - id: chg_files
-        uses: jitterbit/get-changed-files@v1
-        with:
-          format: json
-
       - name: check hold
         id: holdrelease
         uses: actions/github-script@v3
         with:
           script: |
+            result = await github.request(context.payload.repository.compare_url, {
+                base: context.payload.before,
+                head: context.payload.after
+              })
+
+            files = result.data.files.map(file => file.filename)
             //console.log(JSON.stringify(context, null , "  "))
-            files = ${{ steps.chg_files.outputs.all }}
+
             hold = files
               .map(file => (file.startsWith('.github/') || 
                             file.startsWith('tests/') ||
@@ -36,7 +37,11 @@ jobs:
                             file.startsWith('.gitignore')))
               .reduce((sw,c) => (sw && c), true)
 
+            console.log("protected directories? " + hold)
             core.setOutput('hold_protected', hold)
+
+            isdevChange = 0
+            isotherChange = 0
 
             hold2 = files
               .map(file => (file == 'package.json' || 
@@ -45,37 +50,25 @@ jobs:
 
             core.setOutput('hold_package', hold2)
 
-            result = await github.request(context.payload.repository.compare_url, {
-                base: context.payload.before,
-                head: context.payload.after
-              })
-            
-            pInfo = result.data.files.
-              filter(file => file.filename == "package.json")
+            if (hold2) {
+              pInfo = result.data.files.
+                filter(file => file.filename == "package.json")
 
-            pFile = await github.request(pInfo[0].raw_url)
-            devDeps = Object.keys(JSON.parse(pFile.data).devDependencies)
+              pFile = await github.request(pInfo[0].raw_url)
+              devDeps = Object.keys(JSON.parse(pFile.data).devDependencies)
 
-            console.log(JSON.stringify(devDeps))
-            console.log(pInfo[0].patch)
-
-            changes = pInfo[0].patch
-              .split("\n")
-              .filter(change => change.match(/^[+-]\s*/))
-              .map(change => change.replace(/^[+-]\s*"([^"]+).*$/, "$1"))
-              .filter(change => change && change.length)
-
-            console.log(changes)
+              changes = pInfo[0].patch
+                .split("\n")
+                .filter(change => change.match(/^[+-]\s*/))
+                .map(change => change.replace(/^[+-]\s*"([^"]+).*$/, "$1"))
+                .filter(change => change && change.length)
+                
+              isdevChange = changes
+                .filter(change => devDeps.includes(change))
+                .length
               
-            isdevChange = changes
-              .filter(change => devDeps.includes(change))
-              .length
-
-            console.log("dev changes " + isdevChange)
-            
-            isotherChange = changes.length - isdevChange
-
-            core.setOutput('hold_testing', isdevChange && isotherChange)
+              isotherChange = changes.length - isdevChange
+            }
 
             if (isdevChange) {
               console.log("is dev change. MAY HOLD!")
@@ -85,20 +78,20 @@ jobs:
               console.log("is production change. PROCEED!")
             }
 
-            if (hold2) {
-              // get changes for package.json
-              // get package.json if exists
-              // get devDependencies
-            }
+            core.setOutput('hold_testing', isdevChange > 0 && isotherChange == 0)
+
 
       - name: trigger external
         uses: actions/github-script@v3
         with:
           github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
-            myvars = ${{steps.holdrelease.outputs.hold_protected}}
+            bProtected = ${{ steps.holdrelease.outputs.hold_protected }}
+            bPackage = ${{ steps.holdrelease.outputs.hold_package }}
+            bTesting = ${{ steps.holdrelease.outputs.hold_testing }}
+
             core.info(JSON.stringify(myvars))
-            if (myvars && myvars.hold_protected != true) {
+            if (!(bProtected || bPackage || bTesting)) {
               core.info("release via task two")
               await github.actions.createWorkflowDispatch({
                   owner: context.repo.owner,
