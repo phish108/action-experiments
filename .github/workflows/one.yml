@@ -47,7 +47,7 @@ jobs:
                             file == 'package-lock.json'))
               .reduce((sw,c) => (sw && c), true)
 
-            core.info("protected directories? " + hold)
+            core.info("package info only? " + hold2)
             core.setOutput('hold_package', hold2)
 
             if (hold2) {
