@@ -71,7 +71,7 @@ jobs:
               .filter(change => devDeps.includes(change))
               .length
 
-            console.log(`dev changes {isdevChange}`)
+            console.log("dev changes " + isdevChange)
             
             isotherChange = changes.length - isdevChange
 
