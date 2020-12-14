@@ -76,7 +76,9 @@ jobs:
             }
 
             core.setOutput('hold_testing', hold3)
-            core.setOutput('proceed', !(hold1 || hold3))
+            proceed = !(hold1 || hold3)
+            core.info("proceeding? " + proceed)
+            core.setOutput('proceed', proceed)
 
       - name: trigger external
         uses: actions/github-script@v3
