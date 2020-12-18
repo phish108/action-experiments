@@ -18,7 +18,7 @@ jobs:
 
     steps:
       - name: action hold
-        uses: phish108/release-check@master
+        uses: phish108/release-check@1.0.1
         id: isrelease
       - run: | 
           echo '{{ steps.isrelease.outputs.proceed }}'
