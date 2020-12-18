@@ -21,6 +21,11 @@ jobs:
       - name: action hold
         uses: phish108/release-check@1.0.3
         id: isrelease
+        with:
+          protected-paths: | 
+            README.md
+            LICENSE
+            .eslintrc
       - run: | 
           echo '${{ github.sha }}'
           echo '{{ steps.isrelease.outputs.proceed }}'
