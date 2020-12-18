@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: action hold
-        uses: phish108/release-check@1.0.3
+        uses: phish108/release-check@main
         id: isrelease
         with:
           protected-paths: | 
