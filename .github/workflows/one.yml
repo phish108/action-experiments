@@ -28,9 +28,9 @@ jobs:
             .eslintrc
       - run: | 
           echo '${{ github.sha }}'
-          echo '{{ steps.isrelease.outputs.proceed }}'
-          echo '{{ steps.isrelease.outputs.hold_protected }}'
-          echo '{{ steps.isrelease.outputs.hold_development }}'
+          echo '${{ steps.isrelease.outputs.proceed }}'
+          echo '${{ steps.isrelease.outputs.hold_protected }}'
+          echo '${{ steps.isrelease.outputs.hold_development }}'
 
       - name: check hold
         id: holdrelease
