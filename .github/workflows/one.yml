@@ -4,7 +4,7 @@ name: one
 # Controls when the action will run. 
 on:
   push:
-    branch: 
+    branches: 
     - master
   
   # Allows you to run this workflow manually from the Actions tab
@@ -21,6 +21,7 @@ jobs:
         uses: phish108/release-check@1.0.3
         id: isrelease
       - run: | 
+          echo '${{ github.sha }}'
           echo '{{ steps.isrelease.outputs.proceed }}'
           echo '{{ steps.isrelease.outputs.hold_protected }}'
           echo '{{ steps.isrelease.outputs.hold_development }}'
