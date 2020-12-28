@@ -19,4 +19,7 @@ Then we can create a release with a unique name, which is VERSION plus the tag n
 
 The big challenge is to have an appropriate token. 
 
+
+The biggest nuisance of GitHub Actions plus Octokit is that the API returns a strange 404 code that does not help at all. 
+
 How about two [links.md]?
