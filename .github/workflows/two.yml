@@ -32,14 +32,10 @@ jobs:
             const repo = context.repo.repo
             const tag_name = "${{ steps.tagger.outputs.new-tag}}"
 
-            const params = {
+            await github.repos.createRelease({
               owner,
               repo,
               tag_name,
               name: "Version " + tag_name
-            }
-
-            core.info(JSON.stringify(params))
-
-            // await github.repos.createRelease(params);
+            });
             core.info(`successfully released ${ tag_name }!`)
