@@ -25,7 +25,7 @@ jobs:
       - uses: actions/github-script@v3
         name: create a release
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.TRIGGER_TOKEN }}
           script: |
             const owner = context.owner
             const repo = context.repo
