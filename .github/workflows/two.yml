@@ -15,8 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps: 
       - run: 'echo "payload: ${{ github.event.inputs.funny }}"'
+      
+      - uses: phish108/autotag-action@1.1.31
+        id: tagger
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN}}
+          with-v: "true"
+
       - uses: actions/github-script@v3
+        name: create a release
         with:
           script: |
-            console.log("hello")
-            console.log(JSON.stringify(context))
+            const owner = context.owner
+            const repo = context.repo
+            const tag_name = "${{ steps.tagger.output.new-tag}}"
+            await github.repos.createRelease({
+              owner,
+              repo,
+              tag_name,
+              name: "Version " + tag_name
+            });
+            core.info(`successfully released ${ tag_name }!`)
