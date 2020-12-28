@@ -38,4 +38,5 @@ jobs:
               tag_name,
               name: "Version " + tag_name
             });
-            core.info(`successfully released ${ tag_name }!`)
+
+            core.info(`successfully released ${ tag_name }! 🎉`)
