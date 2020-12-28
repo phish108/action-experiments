@@ -34,7 +34,7 @@ jobs:
 
       - name: check hold
         id: release
-        uses: phish108/release-check@v1.0.9
+        uses: phish108/release-check@1.0.9
         
       - name: trigger external
         uses: actions/github-script@v3
